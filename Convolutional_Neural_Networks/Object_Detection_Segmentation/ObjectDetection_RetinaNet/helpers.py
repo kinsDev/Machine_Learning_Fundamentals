@@ -194,7 +194,7 @@ def get_data_loaders(
     """
     Create and returns the train_one_epoch, validation and test data loaders.
 
-    :param foder: folder containing the dataset
+    :param folder: folder containing the dataset
     :param batch_size: size of the mini-batches
     :param valid_size: fraction of the dataset to use for validation. For example 0.2
                        means that 20% of the dataset will be used for validation
