@@ -44,10 +44,11 @@ def get_data_loaders(
         "train": transforms.Compose([
             # YOUR CODE HERE
             transforms.Resize(256),
-            transforms.RandomAffine(degrees = 0, translate = (0.1, 0.1), scale = (0.8, 1.2)),
+            transforms.RandomAffine(degrees = 30, translate = (0.1, 0.1), scale = (0.75, 1.25)),
             transforms.RandomRotation(degrees = 30),
             transforms.RandomCrop(224),
             transforms.RandomHorizontalFlip(),
+            transforms.ColorJitter(brightness = 0.2, contrast = 0.2, saturation = 0.2, hue = 0.1),
             transforms.ToTensor(),
             transforms.Normalize(mean = mean, std = std)
         ]),
