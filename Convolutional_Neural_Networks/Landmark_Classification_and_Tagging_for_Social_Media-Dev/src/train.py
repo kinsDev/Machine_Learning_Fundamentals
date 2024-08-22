@@ -1,7 +1,6 @@
 import tempfile
 
 import torch
-import torch.optim.lr_scheduler as lr_scheduler
 import numpy as np
 from livelossplot import PlotLosses
 from livelossplot.outputs import MatplotlibPlot
@@ -118,7 +117,16 @@ def optimize(data_loaders, model, optimizer, loss, n_epochs, save_path, interact
     # plateau
     # HINT: look here: 
     # https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
-    scheduler  = lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=3, verbose=True)
+    scheduler  = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        optimizer, 
+        mode='min', 
+        factor=0.4, 
+        patience=1, 
+        #threshold = 0.01,
+        #cooldown = 2,
+        #min_lr = 1e-6, 
+        verbose=True
+    )
 
     for epoch in range(1, n_epochs + 1):
 
