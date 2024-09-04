@@ -118,13 +118,10 @@ def optimize(data_loaders, model, optimizer, loss, n_epochs, save_path, interact
     # HINT: look here: 
     # https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
     scheduler  = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, 
-        mode='min', 
-        factor=0.4, 
-        patience=1, 
-        #threshold = 0.01,
-        #cooldown = 2,
-        #min_lr = 1e-6, 
+        optimizer,
+        mode='min',
+        factor=0.1,
+        patience=10, # 7 - experimented with it earlier  
         verbose=True
     )
 

@@ -14,7 +14,12 @@ class MyModel(nn.Module):
         # the Dropout layer, use the variable "dropout" to indicate how much
         # to use (like nn.Dropout(p=dropout))
         self.model = nn.Sequential(
-            nn.Conv2d(in_channels = 3, out_channels = 64, kernel_size = 3, stride = 1, padding = 1),
+            nn.Conv2d(in_channels = 3, out_channels = 32, kernel_size = 3, stride = 1, padding = 1),
+            nn.BatchNorm2d(32),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2),
+            
+            nn.Conv2d(in_channels = 32, out_channels = 64, kernel_size = 3, stride = 1, padding = 1),
             nn.BatchNorm2d(64),
             nn.ReLU(),
             nn.MaxPool2d(2, 2),
@@ -33,20 +38,31 @@ class MyModel(nn.Module):
             nn.BatchNorm2d(512),
             nn.ReLU(),
             nn.MaxPool2d(2, 2),
-            
-            # Flatten and fully connected layers
+        )
+        
+        # Flatten and fully connected layers
+        self.fc_layers = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(in_features = 512 * 14 * 14, out_features = 1024),
+
+            nn.Linear(in_features = 512 * 7 * 7, out_features = 1024),
+            nn.ReLU(),
+            nn.BatchNorm1d(1024),
+            nn.Dropout(p=dropout),
+
+            nn.Linear(in_features = 1024, out_features = 512),
             nn.ReLU(),
             nn.Dropout(p=dropout),
-            nn.Linear(in_features = 1024, out_features = num_classes),
+
+            nn.Linear(in_features = 512, out_features = num_classes)
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         # YOUR CODE HERE: process the input tensor through the
         # feature extractor, the pooling and the final linear
         # layers (if appropriate for the architecture chosen)
-        return self.model(x)
+        x = self.model(x)
+        x = self.fc_layers(x)
+        return x
 
 
 ######################################################################################

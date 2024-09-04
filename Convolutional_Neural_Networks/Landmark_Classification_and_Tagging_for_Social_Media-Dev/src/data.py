@@ -43,28 +43,35 @@ def get_data_loaders(
     data_transforms = {
         "train": transforms.Compose([
             # YOUR CODE HERE
+            
+            # transforms.RandomAffine(degrees = 0, translate = (0.1, 0.1), scale = (0.8, 1.2)),
+            # transforms.RandomRotation(degrees = 30),
+            # transforms.ColorJitter(brightness = 0.2, contrast = 0.2, saturation = 0.2, hue = 0.1),
+            
+            # I used RandAugment instead of the commented transformations above because RandAugment is designed to simplify the
+            # augmentation process by automatically applying a set of augmentations that can enhance the diversity of your training data  
+            # without needing to manually specify each one.
+            
             transforms.Resize(256),
-            transforms.RandomAffine(degrees = 30, translate = (0.1, 0.1), scale = (0.75, 1.25)),
-            transforms.RandomRotation(degrees = 30),
             transforms.RandomCrop(224),
             transforms.RandomHorizontalFlip(),
-            transforms.ColorJitter(brightness = 0.2, contrast = 0.2, saturation = 0.2, hue = 0.1),
+            transforms.RandAugment(num_ops=2, magnitude=15, interpolation=transforms.InterpolationMode.BILINEAR),
             transforms.ToTensor(),
-            transforms.Normalize(mean = mean, std = std)
+            transforms.Normalize(mean, std)
         ]),
         "valid": transforms.Compose([
             # YOUR CODE HERE
             transforms.Resize(256),
-            transforms.CenterCrop(224),
+            transforms.RandomCrop(224),
             transforms.ToTensor(),
-            transforms.Normalize(mean = mean, std = std)
+            transforms.Normalize(mean, std)
         ]),
         "test": transforms.Compose([
             # YOUR CODE HERE
             transforms.Resize(256),
             transforms.CenterCrop(224),
             transforms.ToTensor(),
-            transforms.Normalize(mean = mean, std = std)
+            transforms.Normalize(mean, std)
         ]),
     }    
 
