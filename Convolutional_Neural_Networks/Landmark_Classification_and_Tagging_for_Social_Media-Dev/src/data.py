@@ -41,39 +41,33 @@ def get_data_loaders(
     # HINT: resize the image to 256 first, then crop them to 224, then add the
     # appropriate transforms for that step
     data_transforms = {
-        "train": transforms.Compose([
-            # YOUR CODE HERE
-            
-            # transforms.RandomAffine(degrees = 0, translate = (0.1, 0.1), scale = (0.8, 1.2)),
-            # transforms.RandomRotation(degrees = 30),
-            # transforms.ColorJitter(brightness = 0.2, contrast = 0.2, saturation = 0.2, hue = 0.1),
-            
-            # I used RandAugment instead of the commented transformations above because RandAugment is designed to simplify the
-            # augmentation process by automatically applying a set of augmentations that can enhance the diversity of your training data  
-            # without needing to manually specify each one.
-            
+        "train": transforms.Compose(
+        [
             transforms.Resize(256),
             transforms.RandomCrop(224),
             transforms.RandomHorizontalFlip(),
-            transforms.RandAugment(num_ops=2, magnitude=15, interpolation=transforms.InterpolationMode.BILINEAR),
+            transforms.RandAugment(num_ops=2, magnitude= 15, interpolation=transforms.InterpolationMode.BILINEAR),
             transforms.ToTensor(),
             transforms.Normalize(mean, std)
-        ]),
-        "valid": transforms.Compose([
-            # YOUR CODE HERE
+        ]
+        ),
+        "valid": transforms.Compose(
+        [
             transforms.Resize(256),
             transforms.CenterCrop(224),
             transforms.ToTensor(),
             transforms.Normalize(mean, std)
-        ]),
-        "test": transforms.Compose([
-            # YOUR CODE HERE
+        ]
+        ),
+        "test": transforms.Compose(
+        [
             transforms.Resize(256),
             transforms.CenterCrop(224),
             transforms.ToTensor(),
             transforms.Normalize(mean, std)
-        ]),
-    }    
+        ]
+        ),
+    }
 
     # Create train and validation datasets
     train_data = datasets.ImageFolder(
@@ -110,23 +104,23 @@ def get_data_loaders(
     # prepare data loaders
     data_loaders["train"] = torch.utils.data.DataLoader(
         train_data,
-        batch_size = batch_size,
-        sampler = train_sampler,
-        num_workers = num_workers
+        batch_size=batch_size,
+        sampler=train_sampler,
+        num_workers=num_workers,
     )
     data_loaders["valid"] = torch.utils.data.DataLoader(
         # YOUR CODE HERE
         valid_data,
-        batch_size = batch_size,
-        sampler = valid_sampler,
-        num_workers = num_workers
+        batch_size=batch_size,
+        sampler=valid_sampler,
+        num_workers=num_workers,
     )
 
     # Now create the test data loader
     test_data = datasets.ImageFolder(
         base_path / "test",
         # YOUR CODE HERE (add the test transform)
-        transform = data_transforms["test"]
+        transform=data_transforms["test"]
     )
 
     if limit > 0:
@@ -138,9 +132,10 @@ def get_data_loaders(
     data_loaders["test"] = torch.utils.data.DataLoader(
         # YOUR CODE HERE (remember to add shuffle=False as well)
         test_data,
-        batch_size = batch_size,
-        sampler = test_sampler,
-        num_workers = num_workers
+        batch_size=batch_size,
+        sampler=test_sampler,
+        num_workers=num_workers,
+        shuffle=False,
     )
 
     return data_loaders
@@ -161,7 +156,7 @@ def visualize_one_batch(data_loaders, max_n: int = 5):
     dataiter  = iter(data_loaders["train"])
     # Then call the .next() method on the iterator you just
     # obtained
-    images, labels  = dataiter.next()# YOUR CODE HERE
+    images, labels  = dataiter.next()
 
     # Undo the normalization (for visualization purposes)
     mean, std = compute_mean_and_std()
@@ -176,7 +171,7 @@ def visualize_one_batch(data_loaders, max_n: int = 5):
 
     # YOUR CODE HERE:
     # Get class names from the train data loader
-    class_names  = data_loaders["train"].dataset.classes # YOUR CODE HERE
+    class_names  = data_loaders["train"].dataset.classes
 
     # Convert from BGR (the format used by pytorch) to
     # RGB (the format expected by matplotlib)

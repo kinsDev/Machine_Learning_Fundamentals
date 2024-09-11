@@ -20,8 +20,8 @@ def train_one_epoch(train_dataloader, model, optimizer, loss):
 
     # YOUR CODE HERE: set the model to training mode
     model.train()
+    train_loss = 0.0 
     
-    # Loop over the training data
     train_loss = 0.0
 
     for batch_idx, (data, target) in tqdm(
@@ -44,11 +44,10 @@ def train_one_epoch(train_dataloader, model, optimizer, loss):
         
         # 3. calculate the loss
         loss_value  = loss(output, target)
-        
+
         # 4. backward pass: compute gradient of the loss with respect to model parameters
-        # YOUR CODE HERE:
         loss_value.backward()
-        
+
         # 5. perform a single optimization step (parameter update)
         # YOUR CODE HERE:
         optimizer.step()
@@ -65,8 +64,7 @@ def valid_one_epoch(valid_dataloader, model, loss):
     """
     Validate at the end of one epoch
     """
-    
-    # During validation we don't need to accumulate gradients
+
     with torch.no_grad():
 
         # set the model to evaluation mode
@@ -90,7 +88,7 @@ def valid_one_epoch(valid_dataloader, model, loss):
 
             # 1. forward pass: compute predicted outputs by passing inputs to the model
             output  = model(data)
-            
+
             # 2. calculate the loss
             loss_value  = loss(output, target)
 
@@ -117,13 +115,7 @@ def optimize(data_loaders, model, optimizer, loss, n_epochs, save_path, interact
     # plateau
     # HINT: look here: 
     # https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
-    scheduler  = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer,
-        mode='min',
-        factor=0.1,
-        patience=10, # 7 - experimented with it earlier  
-        verbose=True
-    )
+    scheduler  = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=10, threshold=0.01, verbose=True)
 
     for epoch in range(1, n_epochs + 1):
 
@@ -154,7 +146,7 @@ def optimize(data_loaders, model, optimizer, loss, n_epochs, save_path, interact
 
         # Update learning rate, i.e., make a step in the learning rate scheduler
         # YOUR CODE HERE
-        scheduler.step(valid_loss) # update the learning rate based on the validation loss
+        scheduler.step(valid_loss)
 
         # Log the losses and the current learning rate
         if interactive_tracking:
@@ -195,9 +187,9 @@ def one_epoch_test(test_dataloader, model, loss):
 
             # 1. forward pass: compute predicted outputs by passing inputs to the model
             logits  = model(data)
-            
+
             # 2. calculate the loss
-            loss_value  = loss(logits, target).detach()
+            loss_value  = loss(logits, target)
 
             # update average test loss
             test_loss = test_loss + ((1 / (batch_idx + 1)) * (loss_value.data.item() - test_loss))

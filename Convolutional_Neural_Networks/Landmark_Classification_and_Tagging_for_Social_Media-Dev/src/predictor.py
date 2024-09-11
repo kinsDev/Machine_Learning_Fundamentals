@@ -35,7 +35,7 @@ class Predictor(nn.Module):
             x  = self.model(x)
             # 3. apply softmax
             #    HINT: remmeber to apply softmax across dim=1
-            x  = F.softmax(x, dim = 1)
+            x  = F.softmax(x, dim=1)
 
             return x
 

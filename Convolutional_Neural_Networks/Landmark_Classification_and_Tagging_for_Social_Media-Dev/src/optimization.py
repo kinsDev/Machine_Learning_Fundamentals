@@ -38,9 +38,9 @@ def get_optimizer(
         opt = torch.optim.SGD(
             # YOUR CODE HERE
             model.parameters(),
-            lr = learning_rate,
-            momentum = momentum,
-            weight_decay = weight_decay
+            lr=learning_rate,
+            momentum=momentum,
+            weight_decay=weight_decay
         )
 
     elif optimizer.lower() == "adam":
@@ -50,8 +50,8 @@ def get_optimizer(
         opt = torch.optim.Adam(
             # YOUR CODE HERE
             model.parameters(),
-            lr = learning_rate,
-            weight_decay = weight_decay
+            lr=learning_rate,
+            weight_decay=weight_decay
         )
     else:
         raise ValueError(f"Optimizer {optimizer} not supported")
