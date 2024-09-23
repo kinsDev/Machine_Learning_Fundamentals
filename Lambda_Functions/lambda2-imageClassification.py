@@ -6,7 +6,7 @@ import base64
 import csv
 
 # grab environment variables
-ENDPOINT_NAME = "image-classification-2022-07-13-05-27-55-529"
+ENDPOINT_NAME = "latest-endpoint"
 runtime= boto3.client('runtime.sagemaker')
 
 def classify(event, context):
@@ -18,9 +18,10 @@ def classify(event, context):
 
     payload = json.dumps(event)
 
-    response = runtime.invoke_endpoint(EndpointName=ENDPOINT_NAME, ContentType='image/png', Body=image)
+    response = runtime.invoke_endpoint(EndpointName=ENDPOINT_NAME,
+                                       ContentType='image/png',
+                                       Body=image)
     print(response)
-
     result = json.loads(response['Body'].read().decode())
     event["inferences"] = result
     return {

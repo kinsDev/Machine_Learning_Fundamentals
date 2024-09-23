@@ -1,24 +1,29 @@
 import json
 
-THRESHOLD = .90
+THRESHOLD = 0.90
 
 def lambda_handler(event, context):
+    # Parse the event body
     event = json.loads(event["body"])
 
-    print (event)
+    print(event)
 
     # Grab the inferences from the event
-    inferences = event["inferences"]
+    inferences = event.get("inferences", [])
 
-    # Check if any values in our inferences are above THRESHOLD
-    meets_threshold = (float(inferences[0]) >= THRESHOLD) | (float(inferences[1]) >= THRESHOLD)
+    # Ensure that there are at least two inferences
+    if not inferences or len(inferences) < 2:
+        raise ValueError("Inferences data is missing or invalid")
 
-    # If our threshold is met, pass our data back out of the
-    # Step Function, else, end the Step Function with an error
+    # Check if any values in our inferences are above the THRESHOLD
+    meets_threshold = (float(inferences[0]) >= THRESHOLD) or (float(inferences[1]) >= THRESHOLD)
+
+    # If our threshold is met, pass the data back out of the Step Function
     if meets_threshold:
         pass
     else:
-        raise("THRESHOLD_CONFIDENCE_NOT_MET")
+        # Raise an error if the threshold is not met
+        raise ValueError("THRESHOLD_CONFIDENCE_NOT_MET")
 
     return {
         'statusCode': 200,
